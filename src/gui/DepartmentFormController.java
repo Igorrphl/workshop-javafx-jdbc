@@ -3,6 +3,7 @@ package gui;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import db.DbException;
@@ -17,7 +18,10 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.Light;
+import javafx.scene.effect.Lighting;
 import model.entities.Department;
+import model.exceptions.ValidationException;
 import model.services.DepartmentService;
 
 public class DepartmentFormController implements Initializable{
@@ -47,10 +51,36 @@ public class DepartmentFormController implements Initializable{
 	private Label labelErrorName;
 	
 	@FXML
+	private Label labelErrorDescription;
+	
+	@FXML
+	private Label labelErrorResponsibilities;
+	
+	@FXML
+	private Label labelErrorTeamSize;
+	
+	@FXML
 	private Button btSave;
 	
 	@FXML
 	private Button btCancel;
+	
+	// Exemplo de método para aplicar efeito de iluminação a um botão
+    public void applyLightingEffect(Button button) {
+        Light.Distant light = new Light.Distant();
+        light.setAzimuth(-135.0);
+
+        Lighting lighting = new Lighting();
+        lighting.setLight(light);
+        lighting.setSurfaceScale(5.0);
+        lighting.setSpecularConstant(2.0);
+        lighting.setSpecularExponent(40.0);
+        lighting.setDiffuseConstant(1.5);
+        lighting.setBumpInput(null);
+        lighting.setContentInput(null);
+
+        button.setEffect(lighting);
+    }
 	
 	public void setDepartment(Department entity) {
 		this.entity = entity;
@@ -78,6 +108,9 @@ public class DepartmentFormController implements Initializable{
 			notifyDatachangeListeners();
 			Utils.currenteStage(event).close();
 		}
+		catch (ValidationException e) {
+			setErrorMessages(e.getErrors());
+		}
 		catch (DbException e) {
 			Alerts.showAlert("Error Saving object", null, e.getMessage(), AlertType.ERROR);
 		}
@@ -89,17 +122,38 @@ public class DepartmentFormController implements Initializable{
 			listener.onDataChanged();
 		}
 	}
-
+	
 	private Department getFormData() {
-		Department obj = new Department();
-		
-		obj.setId(Utils.tryParseToInt( txtId.getText()));
-		obj.setName(txtName.getText());
-		obj.setDescription(txtDescription.getText());
-		obj.setResponsibilities(txtResposibilities.getText());
-		obj.setTeamSize(Utils.tryParseToInt( txtTeamSize.getText()));
+	    ValidationException exception = new ValidationException("Validation Error");
 
-		return obj;
+	    if (isFieldEmpty(txtName)) {
+	        exception.addError("Name", "Field can't be empty");
+	    }
+	    if (isFieldEmpty(txtDescription)) {
+	        exception.addError("Description", "Field can't be empty");
+	    }
+	    if (isFieldEmpty(txtResposibilities)) {
+	        exception.addError("Responsibilities", "Field can't be empty");
+	    }
+	    if (isFieldEmpty(txtTeamSize)) {
+	        exception.addError("TeamSize", "Field can't be empty");
+	    }
+
+	    if (exception.getErrors().size() > 0) {
+	        throw exception;
+	    }
+
+	    Department obj = new Department();
+	    obj.setName(txtName.getText());
+	    obj.setDescription(txtDescription.getText());
+	    obj.setResponsibilities(txtResposibilities.getText());
+	    obj.setTeamSize(Utils.tryParseToInt(txtTeamSize.getText()));
+
+	    return obj;
+	}
+
+	private boolean isFieldEmpty(TextField textField) {
+	    return textField.getText() == null || textField.getText().trim().isEmpty();
 	}
 
 	@FXML
@@ -134,5 +188,20 @@ public class DepartmentFormController implements Initializable{
 		txtTeamSize.setText(String.valueOf(entity.getTeamSize()));
 
 	}
+	
+	private void setErrorMessages(Map<String, String> errors) {
+	    for (String field : errors.keySet()) {
+	        if (field.equals("Name")) {
+	            labelErrorName.setText(errors.get("Name"));
+	        } else if (field.equals("Description")) {
+	            labelErrorDescription.setText(errors.get("Description"));
+	        } else if (field.equals("Responsibilities")) {
+	            labelErrorResponsibilities.setText(errors.get("Responsibilities"));
+	        } else if (field.equals("Team Size")) {
+	            labelErrorTeamSize.setText(errors.get("Team Size"));
+	        }
+	    }
+	}
+
 
 }
