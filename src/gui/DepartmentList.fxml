@@ -30,7 +30,7 @@
           <TableColumn fx:id="tableColumnName" prefWidth="75.0" text="Name" />
             <TableColumn fx:id="tableColumnDescription" prefWidth="87.99993896484375" text="Description" />
             <TableColumn fx:id="tableColumnResponsibilities" prefWidth="112.00007629394531" text="Responsibilities" />
-            <TableColumn fx:id="tableColumnQuantEmployees" prefWidth="132.66668701171875" text="Number of employees" />
+            <TableColumn fx:id="tableColumnTeamSize" prefWidth="132.66668701171875" text="Team Size" />
         </columns>
       </TableView>
    </children>

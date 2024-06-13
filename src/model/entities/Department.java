@@ -11,18 +11,18 @@ public class Department implements Serializable {
 	private String name;
 	private String description;
 	private String responsibilities;
-	private Integer quantEmployees;
+	private Integer teamSize;
 	
 	public Department() {
 	}
 
-	public Department(Integer id, String name, String description, String responsibilities, Integer quantEmployees) {
+	public Department(Integer id, String name, String description, String responsibilities, Integer teamSize) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.responsibilities = responsibilities;
-		this.quantEmployees = quantEmployees;
+		this.teamSize = teamSize;
 	}
 
 	public Integer getId() {
@@ -57,12 +57,12 @@ public class Department implements Serializable {
 		this.responsibilities = responsibilities;
 	}
 
-	public Integer getQuantEmployees() {
-		return quantEmployees;
+	public Integer getTeamSize() {
+		return teamSize;
 	}
 
-	public void setQuantEmployees(Integer quantEmployees) {
-		this.quantEmployees = quantEmployees;
+	public void setTeamSize(Integer teamSize) {
+		this.teamSize = teamSize;
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class Department implements Serializable {
 	@Override
 	public String toString() {
 		return "Department [id=" + id + ", name=" + name + ", description=" + description + ", responsibilities="
-				+ responsibilities + ", quantEmployees=" + quantEmployees + "]";
+				+ responsibilities + ", teamSize=" + teamSize + "]";
 	}
 
 	

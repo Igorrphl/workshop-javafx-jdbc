@@ -37,7 +37,7 @@ public class DepartmentListController implements Initializable{
 	private TableColumn<Department, String> tableColumnResponsibilities;
 	
 	@FXML
-	private TableColumn<Department, Integer> tableColumnQuantEmployees;
+	private TableColumn<Department, Integer> tableColumnTeamSize;
 
 	@FXML
 	private Button btNew;
@@ -63,7 +63,7 @@ public class DepartmentListController implements Initializable{
 		tableColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
 		tableColumnDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
 		tableColumnResponsibilities.setCellValueFactory(new PropertyValueFactory<>("responsibilities"));
-		tableColumnQuantEmployees.setCellValueFactory(new PropertyValueFactory<>("quantEmployees"));
+		tableColumnTeamSize.setCellValueFactory(new PropertyValueFactory<>("teamSize"));
 
 		Stage stage = (Stage) Main.getMainScene().getWindow();
 		tableViewDepartment.prefHeightProperty().bind(stage.heightProperty());
