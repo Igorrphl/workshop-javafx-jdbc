@@ -97,6 +97,7 @@ public class DepartmentListController implements Initializable{
 			//Referência para o controlador
 			DepartmentFormController controller = loader.getController();
 			controller.setDepartment(obj);
+			controller.setDepartmentService(new DepartmentService());
 			controller.updateFormData();
 			
 			//Comportamento da janela de cadastro
