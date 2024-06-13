@@ -8,6 +8,8 @@ import java.util.ResourceBundle;
 import application.Main;
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
+import gui.util.Utils;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,6 +19,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -26,46 +29,49 @@ import javafx.stage.Stage;
 import model.entities.Department;
 import model.services.DepartmentService;
 
-public class DepartmentListController implements Initializable, DataChangeListener{
-	
+public class DepartmentListController implements Initializable, DataChangeListener {
+
 	private DepartmentService service;
 
 	@FXML
 	private TableView<Department> tableViewDepartment;
-	
+
 	@FXML
 	private TableColumn<Department, Integer> tableColumnId;
-	
+
 	@FXML
 	private TableColumn<Department, String> tableColumnName;
 
 	@FXML
+	private TableColumn<Department, Department> tableColumnEDIT;
+
+	@FXML
 	private TableColumn<Department, String> tableColumnDescription;
-	
+
 	@FXML
 	private TableColumn<Department, String> tableColumnResponsibilities;
-	
+
 	@FXML
 	private TableColumn<Department, Integer> tableColumnTeamSize;
 
 	@FXML
 	private Button btNew;
-	
+
 	private ObservableList<Department> obsList;
-	
+
 	@FXML
 	public void onBtNewAction(ActionEvent event) {
 		Stage parentStage = gui.util.Utils.currenteStage(event);
 		Department obj = new Department();
 		createDialogForm(obj, "/gui/DepartmentForm.fxml", parentStage);
 	}
-	
+
 	public void setDeparmentService(DepartmentService service) {
 		this.service = service;
 	}
-	
+
 	@Override
-	public void initialize(URL url, ResourceBundle rb) {	
+	public void initialize(URL url, ResourceBundle rb) {
 		initializeNodes();
 	}
 
@@ -79,7 +85,7 @@ public class DepartmentListController implements Initializable, DataChangeListen
 		Stage stage = (Stage) Main.getMainScene().getWindow();
 		tableViewDepartment.prefHeightProperty().bind(stage.heightProperty());
 	}
-	
+
 	public void updateTableView() {
 		if (service == null) {
 			throw new IllegalStateException("Service was null");
@@ -87,50 +93,69 @@ public class DepartmentListController implements Initializable, DataChangeListen
 		List<Department> list = service.findAll();
 		obsList = FXCollections.observableArrayList(list);
 		tableViewDepartment.setItems(obsList);
+		initEditButtons();
 	}
-	
+
 	private void createDialogForm(Department obj, String absoluteName, Stage parenteStage) {
 		try {
-			//View que vou carregar
+			// View que vou carregar
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			Pane pane = loader.load();
-			
-			//Referência para o controlador
+
+			// Referência para o controlador
 			DepartmentFormController controller = loader.getController();
 			controller.setDepartment(obj);
 			controller.setDepartmentService(new DepartmentService());
 			controller.subscribeDataChangeListener(this);
 			controller.updateFormData();
-			
-			//Comportamento da janela de cadastro
+
+			// Comportamento da janela de cadastro
 			Stage dialogStage = new Stage();
-			
-			//Título da janela
+
+			// Título da janela
 			dialogStage.setTitle("Enter Department data");
-			
-			//Cena do stage - Criando uma nova cena
+
+			// Cena do stage - Criando uma nova cena
 			dialogStage.setScene(new Scene(pane));
-			
-			//A janela não pode ser redimensionada
+
+			// A janela não pode ser redimensionada
 			dialogStage.setResizable(false);
-			
-			//Stage pai da janela (parenteStage)
+
+			// Stage pai da janela (parenteStage)
 			dialogStage.initOwner(parenteStage);
-			
-			//Dizer se a janeça é modal - Ou seja ela fica travada enquanto você não fechar ela
+
+			// Dizer se a janeça é modal - Ou seja ela fica travada enquanto você não fechar
+			// ela
 			dialogStage.initModality(Modality.WINDOW_MODAL);
-			
-			
+
 			dialogStage.showAndWait();
 
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			Alerts.showAlert("IO Exception", "Error loading View", e.getMessage(), AlertType.ERROR);
 		}
 	}
-	
+
 	public void onDataChanged() {
 		updateTableView();
+	}
+
+	private void initEditButtons() {
+		tableColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tableColumnEDIT.setCellFactory(param -> new TableCell<Department, Department>() {
+			private final Button button = new Button("edit");
+
+			@Override
+			protected void updateItem(Department obj, boolean empty) {
+				super.updateItem(obj, empty);
+				if (obj == null) {
+					setGraphic(null);
+					return;
+				}
+				setGraphic(button);
+				button.setOnAction(
+						event -> createDialogForm(obj, "/gui/DepartmentForm.fxml", Utils.currenteStage(event)));
+			}
+		});
 	}
 
 }
