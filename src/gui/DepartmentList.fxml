@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="343.0" prefWidth="595.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.DepartmentListController">
+<VBox prefHeight="377.0" prefWidth="683.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.DepartmentListController">
    <children>
       <Label text="Department Registrator">
          <font>
@@ -27,11 +27,12 @@
       <TableView fx:id="tableViewDepartment" prefHeight="218.0" prefWidth="495.0">
         <columns>
           <TableColumn fx:id="tableColumnId" prefWidth="75.0" text="Id" />
-          <TableColumn fx:id="tableColumnName" prefWidth="75.0" text="Name" />
-            <TableColumn fx:id="tableColumnDescription" prefWidth="99.33331298828125" text="Description" />
-            <TableColumn fx:id="tableColumnResponsibilities" prefWidth="120.0" text="Responsibilities" />
-            <TableColumn fx:id="tableColumnTeamSize" prefWidth="131.3333740234375" text="Team Size" />
-            <TableColumn fx:id="tableColumnEDIT" prefWidth="75.33331298828125" />
+          <TableColumn fx:id="tableColumnName" prefWidth="100.66666412353516" text="Name" />
+            <TableColumn fx:id="tableColumnDescription" prefWidth="115.99995422363281" text="Description" />
+            <TableColumn fx:id="tableColumnResponsibilities" prefWidth="158.00006103515625" text="Responsibilities" />
+            <TableColumn fx:id="tableColumnTeamSize" prefWidth="76.00003051757812" text="Team Size" />
+            <TableColumn fx:id="tableColumnEDIT" prefWidth="64.0" />
+            <TableColumn fx:id="tableColumnREMOVE" prefWidth="86.66668701171875" />
         </columns>
       </TableView>
    </children>
