@@ -194,6 +194,4 @@ public class EmployeeListController implements Initializable, DataChangeListener
 			
 		}
 	} 
-
-
 }
